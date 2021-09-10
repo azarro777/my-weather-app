@@ -1,0 +1,22 @@
+.card {
+  width: 350px;
+  height: 257px;
+  border-radius: 5px;
+  background: #fff1fe 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 6px #00000029;
+  opacity: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tempContainer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
