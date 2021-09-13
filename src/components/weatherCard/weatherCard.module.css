@@ -15,8 +15,30 @@
   justify-content: space-between;
 }
 
+.header_right_block {
+  display: flex;
+}
+
 .tempContainer {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+}
+
+.remove_card {
+  width: 10px;
+  height: 10px;
+  font-size: 10px;
+  border: none;
+  background: none;
+  color: #c5c5c5;
+  opacity: 1;
+  margin-right: 0.4rem;
+  margin-top: 0.1rem;
+  cursor: pointer;
+}
+
+.remove_card:hover {
+  color: brown;
+  transform: scale(1.7);
 }

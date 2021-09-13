@@ -6,11 +6,16 @@ import { City } from '../city/city';
 import { TempWeather } from '../tempWeather/tempWeather';
 import { WhpView } from '../whpView/whpView';
 
-export const WeatherCard = ({ data }) => (
+export const WeatherCard = ({ data, remove }) => (
   <div className={classes.card}>
     <div className={classes.header}>
       <City cityData={data} />
-      <WeatherView view={data} />
+      <div className={classes.header_right_block}>
+        <WeatherView view={data} />
+        <button className={classes.remove_card} onClick={() => remove()}>
+          x
+        </button>
+      </div>
     </div>
 
     <DiagramView />

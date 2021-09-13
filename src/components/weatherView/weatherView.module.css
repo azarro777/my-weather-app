@@ -1,4 +1,5 @@
 .container {
+  width: 88px;
   display: flex;
 
   margin: 0;
