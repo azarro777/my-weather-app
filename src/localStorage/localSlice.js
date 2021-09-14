@@ -15,12 +15,30 @@ export const localSlice = createSlice({
       state.defData = [];
     },
     addSearchcities: (state, action) => {
-      state.seachedData = action.payload;
+      state.seachedData.push(action.payload);
+    },
+    getLocalData: (state, action) => {
+      state.seachedData.push(...action.payload);
+    },
+    saveIntoStorage: (state) => {
+      localStorage.setItem('cities', JSON.stringify(state.seachedData));
+    },
+    removeCities: (state, action) => {
+      state.seachedData = state.seachedData.filter(
+        (city) => city.name !== action.payload
+      );
+      localStorage.setItem('cities', JSON.stringify(state.seachedData));
     }
   }
 });
 
-export const { addWeatherObj, removeDefObj, addSearchcities } =
-  localSlice.actions;
+export const {
+  addWeatherObj,
+  removeDefObj,
+  addSearchcities,
+  getLocalData,
+  saveIntoStorage,
+  removeCities
+} = localSlice.actions;
 
 export default localSlice.reducer;
