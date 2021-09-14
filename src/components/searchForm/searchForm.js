@@ -34,8 +34,11 @@ export const SearchForm = () => {
     // Fire Event when a suggested name is selected
     // autocomplete.addListener('place_changed', handlePlaceChanged(autocomplete));
     google.maps.event.addListener(autocomplete, 'place_changed', function () {
-      var place = autocomplete.getPlace();
-      handlePlaceChanged(place);
+      document.getElementById('buttonId').onclick = function () {
+        var place = autocomplete.getPlace();
+        handlePlaceChanged(place);
+        document.getElementById('autocomplete').value = '';
+      };
     });
   };
 
@@ -49,6 +52,7 @@ export const SearchForm = () => {
         .then((res) => res.json())
         .then((result) => {
           dispatch(addSearchcities(result));
+          dispatch(saveIntoStorage());
           console.log(result);
         })
         .catch((err) => console.error(err));
@@ -68,10 +72,7 @@ export const SearchForm = () => {
           id='autocomplete'
           placeholder='City name...'
         />
-        <button
-          className={classes.search_form__button}
-          onClick={() => dispatch(saveIntoStorage())}
-        >
+        <button className={classes.search_form__button} id='buttonId'>
           Add
         </button>
       </div>
