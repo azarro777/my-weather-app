@@ -1,0 +1,16 @@
+.select_input {
+  margin: 20px 40px 0 0;
+  width: 60px;
+  text-align: left;
+  font: normal normal normal 16px/23px Jost;
+  letter-spacing: 0px;
+  color: #000000;
+  opacity: 1;
+  border: none;
+  background: #ffffff 0% 0% no-repeat padding-box;
+}
+
+option:not(:checked) {
+  background-color: #fff;
+  border: none;
+}

@@ -1,17 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import classes from './searchForm.module.css';
 import Script from 'react-load-script';
 import { WEATHER_APP_KEY, GEO_API } from '../../environment/environment';
 import {
   addSearchcities,
   getLocalData,
-  saveIntoStorage
+  saveIntoStorage,
+  getLangData
 } from '../../localStorage/localSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
 export const SearchForm = () => {
   const cities = useSelector((state) => state.local);
   const dispatch = useDispatch();
+  const lang = useSelector((state) => state.local.language);
+
+  let langJson = localStorage.getItem('language');
+  if (lang !== langJson) {
+    dispatch(getLangData(langJson));
+  }
+  console.log('lang', lang);
+
   let citiesJson = localStorage.getItem('cities');
   if (cities.seachedData.length === 0) {
     console.log(citiesJson === null);
@@ -42,22 +51,24 @@ export const SearchForm = () => {
     });
   };
 
+  async function searchCity(place) {
+    await fetch(
+      `http://api.openweathermap.org/data/2.5/weather?q=${place.name}&appid=${WEATHER_APP_KEY}&lang=${lang}&units=metric`
+    )
+      .then((res) => res.json())
+      .then((result) => {
+        const cel = { isCel: true };
+        const newRes = { ...cel, ...result };
+        dispatch(addSearchcities(newRes));
+        dispatch(saveIntoStorage());
+        console.log('newRes', newRes);
+      })
+      .catch((err) => console.error(err));
+  }
+
   const handlePlaceChanged = (place) => {
     console.log(place);
-
-    function searchCity() {
-      fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${place.name}&appid=${WEATHER_APP_KEY}`
-      )
-        .then((res) => res.json())
-        .then((result) => {
-          dispatch(addSearchcities(result));
-          dispatch(saveIntoStorage());
-          console.log(result);
-        })
-        .catch((err) => console.error(err));
-    }
-    searchCity();
+    searchCity(place);
   };
 
   console.log('cities', cities.seachedData);
@@ -67,7 +78,6 @@ export const SearchForm = () => {
       <Script url={GEO_API} onLoad={handleScriptLoad} />
       <div className='form-container'>
         <input
-          lang='en'
           className={classes.search_form__item}
           id='autocomplete'
           placeholder='City name...'

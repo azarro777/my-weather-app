@@ -4,7 +4,8 @@ export const localSlice = createSlice({
   name: 'local',
   initialState: {
     defData: [],
-    seachedData: []
+    seachedData: [],
+    language: ''
   },
   reducers: {
     addWeatherObj: (state, action) => {
@@ -16,6 +17,7 @@ export const localSlice = createSlice({
     },
     addSearchcities: (state, action) => {
       state.seachedData.push(action.payload);
+      // state.seachedData.push(...{ isCel: true });
     },
     getLocalData: (state, action) => {
       state.seachedData.push(...action.payload);
@@ -28,6 +30,40 @@ export const localSlice = createSlice({
         (city) => city.name !== action.payload
       );
       localStorage.setItem('cities', JSON.stringify(state.seachedData));
+    },
+    chooseLang: (state, action) => {
+      state.language = action.payload;
+      localStorage.setItem('language', state.language);
+    },
+    getLangData: (state, action) => {
+      // localStorage.getItem('language');
+      state.language = action.payload;
+    },
+    changeFalseTemp: (state, action) => {
+      let newObj = JSON.parse(JSON.stringify(state.seachedData));
+      newObj = newObj.map((el) => {
+        if (el.name === action.payload.name) {
+          return action.payload;
+        } else {
+          return el;
+        }
+      });
+      state.seachedData = newObj;
+      localStorage.setItem('cities', JSON.stringify(newObj));
+      console.log('state', newObj);
+    },
+    changeTrueTemp: (state, action) => {
+      let newObj = JSON.parse(JSON.stringify(state.seachedData));
+      newObj = newObj.map((el) => {
+        if (el.name === action.payload.name) {
+          return action.payload;
+        } else {
+          return el;
+        }
+      });
+      state.seachedData = newObj;
+      localStorage.setItem('cities', JSON.stringify(newObj));
+      console.log('state', newObj);
     }
   }
 });
@@ -38,7 +74,11 @@ export const {
   addSearchcities,
   getLocalData,
   saveIntoStorage,
-  removeCities
+  removeCities,
+  chooseLang,
+  getLangData,
+  changeFalseTemp,
+  changeTrueTemp
 } = localSlice.actions;
 
 export default localSlice.reducer;

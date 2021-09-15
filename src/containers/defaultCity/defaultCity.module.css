@@ -2,3 +2,8 @@
   display: flex;
   flex-wrap: wrap;
 }
+
+.container_header {
+  display: flex;
+  justify-content: space-between;
+}
