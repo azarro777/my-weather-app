@@ -4,19 +4,16 @@ import { changeFalseTemp, changeTrueTemp } from '../../localStorage/localSlice';
 
 export const TempWeather = ({ tempData }) => {
   const dispatch = useDispatch();
-  console.log('tempData', tempData);
 
   const changeCel = (tempData) => {
     let newObj = JSON.parse(JSON.stringify(tempData));
     newObj.isCel = true;
-    console.log('temp changed', newObj);
     dispatch(changeTrueTemp(newObj));
   };
 
   const changeFah = (tempData) => {
     let newObj = JSON.parse(JSON.stringify(tempData));
     newObj.isCel = false;
-    console.log('temp changed', newObj);
     dispatch(changeFalseTemp(newObj));
   };
 
@@ -38,14 +35,12 @@ export const TempWeather = ({ tempData }) => {
     }
   };
 
-  console.log('converter', converter(tempData));
-
   return (
     <div className={classes.container}>
       <div className={classes.temp}>
         {tempData.main.temp > 0
           ? '+' + converter(tempData)
-          : '-' + converter(tempData)}
+          : converter(tempData)}
         <p
           className={classes.celcius}
           onClick={() => changeCel(tempData)}
@@ -68,7 +63,7 @@ export const TempWeather = ({ tempData }) => {
         Feels like:
         {tempData.main.feels_like > 0
           ? '+' + converterFeel(tempData)
-          : '-' + converterFeel(tempData)}
+          : converterFeel(tempData)}
         <span> {tempData.isCel ? '\u2103' : '\u2109'}</span>
       </p>
     </div>

@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import classes from './searchForm.module.css';
 import Script from 'react-load-script';
 import { WEATHER_APP_KEY, GEO_API } from '../../environment/environment';
@@ -9,6 +8,7 @@ import {
   getLangData
 } from '../../localStorage/localSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import { useCallback } from 'react';
 
 export const SearchForm = () => {
   const cities = useSelector((state) => state.local);
@@ -19,17 +19,20 @@ export const SearchForm = () => {
   if (lang !== langJson) {
     dispatch(getLangData(langJson));
   }
-  console.log('lang', lang);
+  console.log('lang', lang, langJson);
 
-  let citiesJson = localStorage.getItem('cities');
-  if (cities.seachedData.length === 0) {
-    console.log(citiesJson === null);
-    if (citiesJson === null) {
-      citiesJson = '';
-    } else {
-      dispatch(getLocalData(JSON.parse(citiesJson)));
+  const checkStateata = useCallback(() => {
+    let citiesJson = localStorage.getItem('cities');
+    if (cities.seachedData.length === 0) {
+      console.log(citiesJson === null);
+      if (citiesJson === null) {
+        citiesJson = '';
+      } else {
+        dispatch(getLocalData(JSON.parse(citiesJson)));
+      }
     }
-  }
+  }, [cities]);
+  checkStateata();
 
   const handleScriptLoad = () => {
     var options = { types: ['(cities)'] };
@@ -45,32 +48,32 @@ export const SearchForm = () => {
     google.maps.event.addListener(autocomplete, 'place_changed', function () {
       document.getElementById('buttonId').onclick = function () {
         var place = autocomplete.getPlace();
-        handlePlaceChanged(place);
+        getWeatherData(place);
         document.getElementById('autocomplete').value = '';
       };
     });
   };
 
-  async function searchCity(place) {
-    await fetch(
-      `http://api.openweathermap.org/data/2.5/weather?q=${place.name}&appid=${WEATHER_APP_KEY}&lang=${lang}&units=metric`
-    )
-      .then((res) => res.json())
-      .then((result) => {
-        const cel = { isCel: true };
-        const newRes = { ...cel, ...result };
-        dispatch(addSearchcities(newRes));
-        dispatch(saveIntoStorage());
-        console.log('newRes', newRes);
-      })
-      .catch((err) => console.error(err));
-  }
-
-  const handlePlaceChanged = (place) => {
-    console.log(place);
-    searchCity(place);
-  };
-
+  const getWeatherData = useCallback(
+    (place) => {
+      async function searchCity(place) {
+        let langJson = localStorage.getItem('language');
+        await fetch(
+          `http://api.openweathermap.org/data/2.5/weather?q=${place.name}&appid=${WEATHER_APP_KEY}&lang=${langJson}&units=metric`
+        )
+          .then((res) => res.json())
+          .then((result) => {
+            const cel = { isCel: true };
+            const newRes = { ...cel, ...result };
+            dispatch(addSearchcities(newRes));
+            dispatch(saveIntoStorage());
+          })
+          .catch((err) => console.error(err));
+      }
+      searchCity(place);
+    },
+    [lang]
+  );
   console.log('cities', cities.seachedData);
 
   return (

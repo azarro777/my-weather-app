@@ -9,15 +9,17 @@ export const localSlice = createSlice({
   },
   reducers: {
     addWeatherObj: (state, action) => {
+      action.payload.isCel = true;
       state.defData = action.payload;
     },
 
     removeDefObj: (state) => {
+      localStorage.removeItem('latitude');
+      localStorage.removeItem('longitude');
       state.defData = [];
     },
     addSearchcities: (state, action) => {
       state.seachedData.push(action.payload);
-      // state.seachedData.push(...{ isCel: true });
     },
     getLocalData: (state, action) => {
       state.seachedData.push(...action.payload);
@@ -36,11 +38,13 @@ export const localSlice = createSlice({
       localStorage.setItem('language', state.language);
     },
     getLangData: (state, action) => {
-      // localStorage.getItem('language');
       state.language = action.payload;
     },
     changeFalseTemp: (state, action) => {
       let newObj = JSON.parse(JSON.stringify(state.seachedData));
+      let newDefObj = JSON.parse(JSON.stringify(state.defData));
+      newDefObj = action.payload;
+      state.defData = newDefObj;
       newObj = newObj.map((el) => {
         if (el.name === action.payload.name) {
           return action.payload;
@@ -50,10 +54,12 @@ export const localSlice = createSlice({
       });
       state.seachedData = newObj;
       localStorage.setItem('cities', JSON.stringify(newObj));
-      console.log('state', newObj);
     },
     changeTrueTemp: (state, action) => {
       let newObj = JSON.parse(JSON.stringify(state.seachedData));
+      let newDefObj = JSON.parse(JSON.stringify(state.defData));
+      newDefObj = action.payload;
+      state.defData = newDefObj;
       newObj = newObj.map((el) => {
         if (el.name === action.payload.name) {
           return action.payload;
@@ -63,7 +69,6 @@ export const localSlice = createSlice({
       });
       state.seachedData = newObj;
       localStorage.setItem('cities', JSON.stringify(newObj));
-      console.log('state', newObj);
     }
   }
 });

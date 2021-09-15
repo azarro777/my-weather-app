@@ -3,7 +3,7 @@ import classes from './weatherCard.module.css';
 import { WeatherView } from '../weatherView/weatherView';
 import { DiagramView } from '../diagramView/diagramView';
 import { City } from '../city/city';
-import { TempWeather } from '../tempWeather/tempWeather';
+import { TempWeather } from '../../containers/tempWeather/tempWeather';
 import { WhpView } from '../whpView/whpView';
 
 export const WeatherCard = ({ data, remove }) => (
@@ -18,7 +18,7 @@ export const WeatherCard = ({ data, remove }) => (
       </div>
     </div>
 
-    <DiagramView />
+    <DiagramView tempData={data} />
     <div className={classes.tempContainer}>
       <TempWeather tempData={data} />
       <WhpView whpData={data} />

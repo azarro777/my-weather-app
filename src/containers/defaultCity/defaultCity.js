@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import classes from './defaultCity.module.css';
 import { WeatherCard } from '../../components/weatherCard/weatherCard';
-import { SearchForm } from '../../components/searchForm/searchForm';
+import { SearchForm } from '../searchForm/searchForm';
 import { useSelector, useDispatch } from 'react-redux';
 import { LanguageSelector } from '../../components/languageSelector/languageSelector';
 import {
@@ -19,22 +19,15 @@ export const DefaultCity = () => {
   const defObj = useSelector((state) => state.local);
   const lang = useSelector((state) => state.local.language);
   const dispatch = useDispatch();
+
   const latLS = localStorage.getItem('latitude');
   const longLS = localStorage.getItem('longitude');
-
-  console.log('default object', defObj);
-  console.log(cities.seachedData);
 
   const removeDefaultCard = () => {
     localStorage.removeItem('latitude');
     localStorage.removeItem('longitude');
     dispatch(removeDefObj());
   };
-
-  // const removeSearchedCard = (c) => {
-  //   dispatch(removeCities(c.name));
-  // };
-
   useEffect(() => {
     const getData = async () => {
       navigator.geolocation.getCurrentPosition(function (position) {
@@ -47,19 +40,13 @@ export const DefaultCity = () => {
       )
         .then((res) => res.json())
         .then((result) => {
-          // setData(result);
           dispatch(addWeatherObj(result));
-
-          console.log(result);
         });
     };
     getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const changeTemp = (el) => {
-    console.log('change temp', el.name);
-  };
   return (
     <div className={classes.container}>
       <div className={classes.container_header}>
@@ -73,7 +60,6 @@ export const DefaultCity = () => {
         ) : null}
         {cities.seachedData.length !== 0
           ? cities.seachedData.map((el, index) => {
-              console.log('el', el.name);
               return (
                 <WeatherCard
                   key={index}
